@@ -6,6 +6,28 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:io';
 import 'dart:convert';
 
+class Address {
+  String province;
+  String district;
+  Address(this.province, this.district);
+  Map toJson() => {
+        'province': province,
+        'district': district,
+      };
+}
+
+class User {
+  String name;
+  int age;
+  Address adress;
+  User(this.name, this.age, this.adress);
+  Map toJson() => {
+        'name': name,
+        'age': age,
+        'adress': adress,
+      };
+}
+
 void main() {
   runApp(MyApp());
 }
@@ -25,7 +47,8 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-  var url = "https://www.google.com/search?q=";
+  var url =
+      "https://restgo-assistants-p2jtvpwdta-df.a.run.app/app-loading?auth=";
 
   void _handleURLButtonPress(
       BuildContext context, String url, String title) async {
@@ -36,16 +59,19 @@ class HomePage extends StatelessWidget {
       urlImageApi = result.toString(); //use toString to convert as String
     });
 
-    final key = encrypt.Key.fromUtf8('my 32 length key................');
-    final iv = encrypt.IV.fromLength(16);
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+    // urlImageApi = jsonUser;
+
+    final key = encrypt.Key.fromUtf8('sGz9lSwLK3BBffcudQzEqJIqqHFoiiTE');
+    final iv = encrypt.IV.fromLength(256);
+    final encrypter =
+        encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.ecb));
     final encrypted = encrypter.encrypt(urlImageApi, iv: iv);
     final decrypted = encrypter.decrypt(encrypted, iv: iv);
 
     print("decrypt : $decrypted");
     print(encrypted.base64);
 
-    url = url + encrypted.base64;
+    url = url + encrypted.base64 + "&returnUrl=/dashboard";
     print("url final : $url");
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => WebViewPage(url, title)));
@@ -90,9 +116,13 @@ class HomePage extends StatelessWidget {
 }
 
 Future<String> getLogoClient() async {
-  var urlImage = "1234";
+  // var urlImage = "1234";
+  Address address = Address('chonburi', 'sriracha');
+  User user = User('babe', 22, address);
+  String jsonUser = jsonEncode(user);
+
   // print("image from function : $urlImage");
-  return urlImage;
+  return jsonUser;
 }
 
 class WebViewPage extends StatefulWidget {
