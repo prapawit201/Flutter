@@ -61,7 +61,7 @@ class HomePage extends StatelessWidget {
 
     // urlImageApi = jsonUser;
 
-    final key = encrypt.Key.fromUtf8('sGz9lSwLK3BBffcudQzEqJIqqHFoiiTE');
+    final key = encrypt.Key.fromUtf8('KEY_ACCESS');
     final iv = encrypt.IV.fromLength(256);
     final encrypter =
         encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.ecb));
